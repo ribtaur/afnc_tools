@@ -67,6 +67,11 @@ def ModelFit(filepath,i):
             )
             df["model"] = f_model_diff_m(df["x"], popt[0], popt[1])
     
+    rows =  df.shape[0]
+    q = popt[0] - rows/2
+    perr = np.sqrt(np.diag(pcov))
+    Dq, Dd = perr
+
     # Create the plot
     fig, ax = plt.subplots()
     axb = ax.twinx()
@@ -85,7 +90,7 @@ def ModelFit(filepath,i):
     sparser_y = df["theta1"][sparser][::4]
 
     # Plot the line first
-    ax.plot(df["x"], df["model"], color="red", linewidth=1.75, label="Modelo \n q     = {:.2f}\n $\Delta$ = {:.2f}".format(popt[0],popt[1]),zorder=2)
+    ax.plot(df["x"], df["model"], color="red", linewidth=1.75, label="Modelo \n q     = {:.2f}\n $\Delta$ = {:.2f}".format(q,popt[1]),zorder=2)
 
     #ax.plot(df["x"][::8],df["theta1"][::8],'o', markersize=3.5, markerfacecolor='none', label='Simulación',zorder=10,color="black")
     ax.plot(sparsel_x,sparsel_y,'o', markersize=3.5, markerfacecolor='none',zorder=10,color="black")
@@ -94,14 +99,14 @@ def ModelFit(filepath,i):
     
     # Add grid, labels, and ticks
     
-    xticks = np.arange(0, 513, 32)
-    xlabels = xticks - 256  # Shift center to 0
+    xticks = np.arange(0, rows+1, int(rows/8))
+    xlabels = xticks - rows/2  # Shift center to 0
 
     ax.set_title('{}'.format(title))
     ax.set_xticks(xticks)
     ax.set_xticklabels(xlabels)
 
-    plt.xlim([128,384])
+    plt.xlim([rows/4,3*rows/4])
     
     if isdiff:
         ax.set_yticks(np.arange(15,16,60))
@@ -123,7 +128,7 @@ def ModelFit(filepath,i):
     #ax.set_ylabel(r'$\theta$', rotation=0)
     
     # Add a vertical line at x=256
-    ax.axvline(x=256, color='black', linestyle='--', linewidth=0.8)
+    ax.axvline(x=rows/2, color='black', linestyle='--', linewidth=0.8)
     
     l =ax.legend(loc='lower right',bbox_to_anchor=(0.99, 0.2))
     l.set_zorder(15)
@@ -139,8 +144,10 @@ def ModelFit(filepath,i):
     # Save params
     f = open(os.path.join(directory, "params_{}.txt".format(i)),"w")
     f.write("{}\n".format(title))
-    f.write("q = {}\n".format(popt[0]))
+    f.write("q = {}\n".format(q))
     f.write("Delta = {}\n".format(popt[1]))
+    f.write("q_err = {}\n".format(Dq))
+    f.write("Delta_err = {}\n".format(Dd))
     f.write("TH1 = {}\n".format(df["theta1"][0]))
     f.write("TH2 = {}".format(df["theta1"].values[-1]))
     f.close
@@ -158,7 +165,7 @@ if __name__ == "__main__":
     for root, dirs, files in os.walk(rootdir,topdown=True):
         for i in range(3):
             tabdir = os.path.join(root,'segment_{0}.txt'.format(i))
-            imgdir = os.path.join(root,'model_{0}.png'.format(i))
+            imgdir = os.path.join(root,'segment_{0}_model.png'.format(i))
             if os.path.isfile(imgdir) and not args.force:
                 print(f"The file '{imgdir}' is already rendered. Skipping...")
                 pass
