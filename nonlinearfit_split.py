@@ -27,7 +27,9 @@ def f_model_diff_m(x,q,d):
 def ModelFit(filepath,i):
     # Load the data
     df = pd.read_csv(filepath, sep=" ")
-    title = (os.path.basename(os.path.dirname(filepath)))+' Segmento {}'.format(i)
+    title = (os.path.basename(os.path.dirname(filepath)))
+    if args.seg:
+        title = title + ' Segmento {}'.format(i)
     # Fit the model
     if (max(df["theta1"])-min(df["theta1"]) > 45):
         isdiff = False
@@ -156,6 +158,7 @@ if __name__ == "__main__":
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description="Render plots from OVF files.")
     parser.add_argument("--force", action="store_true", help="Force rendering even if the image already exists.")
+    parser.add_argument("--seg", action="store_true", help="Prints the segment name in the title of the plot")
     args = parser.parse_args()
 
     start = time.time()
