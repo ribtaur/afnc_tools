@@ -124,7 +124,7 @@ def plot_cw_ang(filenames, onlytxt = 0):
     #plt.figure(figsize=(10, 2))
 
     xticks = np.arange(0, xnodes+1, int(xnodes/4))
-    xlabels = xticks - 256  # Shift center to 0
+    xlabels = xticks - int(xnodes/2)  # Shift center to 0
     ax.set_xticks(xticks)
     ax.set_xticklabels(xlabels)
 
