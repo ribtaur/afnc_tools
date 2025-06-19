@@ -18,7 +18,7 @@ def sci_notation_latex(value, error, precision=2):
     exponent = int(np.floor(np.log10(abs(value))))
     mantissa = value / 10**exponent
     error_mantissa = error / 10**exponent
-    return r"$\left( {:.{}f} \pm {:.{}f} \right) \times 10^{{{}}}$".format(
+    return r"$\left( {:.{}f} \pm {:.{}f} \right) \cdot 10^{{{}}}$".format(
         mantissa, precision, error_mantissa, precision, exponent
     )
 

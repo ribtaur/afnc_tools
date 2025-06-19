@@ -5,7 +5,8 @@ import os
 import time
 
 # Enable LaTeX rendering
-plt.rcParams['text.usetex'] = True
+plt.rc('text', usetex=True)
+plt.rc('text.latex', preamble=r'\usepackage{siunitx}')
 
 def parse_ovf1(filename, getnodes):
     with open(filename, 'r') as f:
@@ -128,19 +129,19 @@ def plot_cw_ang(filenames, onlytxt = 0):
     ax.set_xticks(xticks)
     ax.set_xticklabels(xlabels)
 
-    plt.title(r'Theta for $m_1$, Central Row')
-    plt.xlabel('X in nm')
+    plt.title(r'$\varphi_1$, Fila central')
+    plt.xlabel(r'$x$ $\unit{\nm}$')
     #plt.xticks(np.arange(0,1024,128))
-    plt.ylabel(r'$\theta$',rotation=0)
+    plt.ylabel(r'$\varphi$',rotation=0)
     plt.yticks(np.arange(-435,435,15))
     #plt.axis('equal')
     #plt.plot(x, u, 'r', x, v, 'g', x, w, 'b', label=['m_x','m_y','m_z'])
-    plt.plot(x, theta1, 'r', label='$m_1$')
+    plt.plot(x, theta1, 'r', label=r'$\vec{m}_1$')
 
     # Add a horizontal line at y=0
     #plt.axhline(y=0, color='black', linestyle='--', linewidth=0.8)
     # Add a vertical line at x=256
-    plt.axvline(x=256, color='black', linestyle='--', linewidth=0.8)
+    plt.axvline(x=xnodes/2, color='black', linestyle='--', linewidth=0.8)
 
     plt.margins(0.05)
 
@@ -151,8 +152,8 @@ def plot_cw_ang(filenames, onlytxt = 0):
 
     plt.title('Theta, Central Row')
     plt.yticks(np.arange(-435,435,30))
-    plt.plot(x, theta2, 'g', label='$m_2$')
-    plt.plot(x, theta, 'b', label='$m_3$')
+    plt.plot(x, theta2, 'g', label=r'$\vec{m}_2$')
+    plt.plot(x, theta, 'b', label=r'$\vec{m}_3$')
 
     plt.legend(loc='lower right')
     #plt.legend(loc='lower right', bbox_to_anchor=(0.5, -0.05))
